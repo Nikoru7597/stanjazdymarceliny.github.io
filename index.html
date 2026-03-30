@@ -25,6 +25,8 @@
   --border: #1e1e1e;
   --text-dim: #3a3a3a;
   --text-faint: #252525;
+  --messenger: #0084ff;
+  --messenger-dim: #003a70;
 }
 
 body {
@@ -280,6 +282,166 @@ button:active { transform:scale(.97); }
   transition: width 1.2s cubic-bezier(.34,1.56,.64,1), background .5s;
 }
 
+/* ─── MESSENGER BAN TILE ─────────────────────── */
+.ban-tile {
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 12px 12px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .5s;
+}
+
+.ban-tile.banned {
+  border-color: #2a0a0a;
+  box-shadow: 0 0 20px rgba(255, 50, 50, 0.06);
+}
+
+.ban-tile.unbanned {
+  border-color: #0a1f0a;
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.06);
+}
+
+.ban-tile-label {
+  font-size: .46rem;
+  color: #3a3a3a;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+/* Akinator-style oracle text */
+.ban-oracle {
+  font-size: .52rem;
+  color: #333;
+  letter-spacing: 1.5px;
+  text-align: center;
+  margin-bottom: 10px;
+  line-height: 1.6;
+  font-style: italic;
+  min-height: 2.4em;
+  transition: color .5s;
+}
+.ban-tile.banned  .ban-oracle { color: #5a2020; }
+.ban-tile.unbanned .ban-oracle { color: #1e4a1e; }
+
+/* Big emoji */
+.ban-emoji {
+  font-size: 2.8rem;
+  text-align: center;
+  display: block;
+  margin: 4px 0 8px;
+  filter: grayscale(1) brightness(0.4);
+  transition: filter .5s, transform .4s;
+  line-height: 1;
+}
+.ban-tile.banned  .ban-emoji { filter: grayscale(0) brightness(1); transform: scale(1.08) rotate(-4deg); }
+.ban-tile.unbanned .ban-emoji { filter: grayscale(0) brightness(1); transform: scale(1.12) rotate(4deg); }
+
+/* Status text */
+.ban-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.ban-badge {
+  font-family: 'Syne', sans-serif;
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  transition: all .4s;
+}
+.ban-tile.banned  .ban-badge { color: var(--red); background: #1a0505; border: 1px solid #3a0808; text-shadow: 0 0 10px rgba(255,50,50,.4); }
+.ban-tile.unbanned .ban-badge { color: var(--green); background: #051a05; border: 1px solid #0a3a0a; text-shadow: 0 0 10px rgba(57,255,20,.4); }
+
+/* Toggle pill */
+.ban-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #080808;
+  border: 1px solid #1a1a1a;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-top: 4px;
+}
+.ban-toggle-label {
+  font-size: .46rem;
+  color: #2a2a2a;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.toggle-switch {
+  position: relative;
+  width: 38px;
+  height: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 99px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  transition: background .35s, border-color .35s, box-shadow .35s;
+}
+.toggle-thumb {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #333;
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1), background .35s, box-shadow .35s;
+}
+.toggle-switch input:checked ~ .toggle-track {
+  background: #1a0505;
+  border-color: #3a0808;
+  box-shadow: 0 0 8px rgba(255,50,50,.2);
+}
+.toggle-switch input:checked ~ .toggle-thumb {
+  transform: translateX(18px);
+  background: var(--red);
+  box-shadow: 0 0 6px rgba(255,50,50,.6);
+}
+
+/* messenger icon dot */
+.msn-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #0084ff;
+  margin-right: 5px;
+  vertical-align: middle;
+  opacity: .25;
+  transition: opacity .4s, box-shadow .4s;
+}
+.ban-tile.banned .msn-dot {
+  opacity: 1;
+  box-shadow: 0 0 6px #0084ff;
+  animation: msnBlink 1.8s ease-in-out infinite;
+}
+@keyframes msnBlink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* scanline on tile */
+.ban-tile::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.015), transparent);
+  pointer-events: none;
+  animation: scanline 4s linear infinite;
+}
+@keyframes scanline { 0%{top:-40%} 100%{top:120%} }
+
 /* ─── GLOSSARY PANEL ─────────────────────────── */
 .glossary-panel {
   background: var(--panel);
@@ -453,6 +615,36 @@ button:active { transform:scale(.97); }
       <div class="stat-sub">poziom zasobnika</div>
       <button onclick="useBlinker()" style="margin-top:8px;width:100%;background:#1f1800;color:#ffaa00;border:1px solid #4a3a00;border-radius:4px;padding:6px;font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:2px;cursor:pointer;">− UŻYJ KIERUNKOWSKAZ</button>
     </div>
+
+    <!-- ══════ BAN MESSENGER TILE ══════ -->
+    <!--
+    ╔══════════════════════════════════════════════════════════╗
+    ║  BAN NA MESSENGERZE — JAK ZMIENIĆ                       ║
+    ║                                                          ║
+    ║  Szukaj zmiennej poniżej:                               ║
+    ║    const MARCELINA_MA_BANA = true;                      ║
+    ║                                                          ║
+    ║  true  = ma bana  (czerwono, zakazane)                  ║
+    ║  false = nie ma bana (zielono, wolność)                 ║
+    ╚══════════════════════════════════════════════════════════╝
+    -->
+    <div class="ban-tile" id="banTile">
+      <div class="ban-tile-label"><span class="msn-dot" id="msnDot"></span>Messenger</div>
+      <span class="ban-emoji" id="banEmoji">🫃</span>
+      <div class="ban-oracle" id="banOracle">…analizuję sygnały z sieci…</div>
+      <div class="ban-status-row">
+        <div class="ban-badge" id="banBadge">ŁADOWANIE</div>
+      </div>
+      <div class="ban-toggle-row">
+        <span class="ban-toggle-label">stan bana</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="banToggle" onchange="onBanToggle(this.checked)">
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+    </div>
+
   </div>
 
   <!-- ══════ CENTER: DASHBOARD ══════ -->
@@ -462,7 +654,6 @@ button:active { transform:scale(.97); }
 
     <div class="header">
       <div class="title-block">
-        <!-- ZMIEŃ TU: nazwa w lewym górnym rogu -->
         <h1>Marcwelina kurs jazdy po alkoholu</h1>
         <div class="sub">Driving Status Monitor &nbsp;·&nbsp; v1.0</div>
       </div>
@@ -498,7 +689,6 @@ button:active { transform:scale(.97); }
 
     <div class="status-big">
       <div class="status-name">Komunikat systemowy</div>
-      <!-- ZMIEŃ TU: komunikat przy zatrzymaniu -->
       <div class="status-msg" id="statusMsg">MARCWELINA NIE JEDZIE 🚫 — MOŻNA WYCHODZIĆ Z DOMU!</div>
     </div>
 
@@ -507,7 +697,6 @@ button:active { transform:scale(.97); }
       <button class="btn-stop"  onclick="stopDriving()">■ &nbsp;STOP JAZDY</button>
     </div>
 
-    <!-- ZMIEŃ TU: stopka -->
     <div class="footer">Prawo Jazdy 2026 &nbsp;·&nbsp; Monitor Pokładowy &nbsp;·&nbsp; SYS OK</div>
   </div>
 
@@ -516,72 +705,36 @@ button:active { transform:scale(.97); }
     <div class="glossary-title">📖 Słownik Marcweliny</div>
     <p style="font-size:.5rem;color:#333;margin-bottom:10px;letter-spacing:1px;">kliknij termin aby rozwinąć</p>
 
-    <!--
-    ╔══════════════════════════════════════════════════════════════════╗
-    ║  SŁOWNIK — JAK EDYTOWAĆ DEFINICJE                               ║
-    ║                                                                  ║
-    ║  Każdy wpis ma dwie rzeczy do zmiany:                           ║
-    ║  1. Tekst w <span class="gloss-word">TUTAJ</span>               ║
-    ║     → to jest WYŚWIETLANA NAZWA na przycisku                    ║
-    ║  2. Trzeci argument w toggleGloss(this, 'słowo', 'OPIS TUTAJ')  ║
-    ║     → to jest DEFINICJA która wyskakuje po kliknięciu           ║
-    ║                                                                  ║
-    ║  Uwaga: jeśli w opisie chcesz użyć cudzysłowu, pisz &quot;     ║
-    ╚══════════════════════════════════════════════════════════════════╝
-    -->
-
-    <!-- ┌─────────────────────────────────────────────────────────┐
-         │  DEFINICJA 1 — PIZDZIOCH                                │
-         │  Zmień opis po przecinku w toggleGloss(...)             │
-         └─────────────────────────────────────────────────────────┘ -->
     <div class="gloss-item" onclick="toggleGloss(this,'pizdzioch','Auto którym jeździ Marcwelina. ')">
       <div class="gloss-term"><span class="gloss-word">PIZDZIOCH</span><span class="gloss-arrow">›</span></div>
       <div class="gloss-def"></div>
     </div>
 
-    <!-- ┌─────────────────────────────────────────────────────────┐
-         │  DEFINICJA 2 — 67                                       │
-         └─────────────────────────────────────────────────────────┘ -->
     <div class="gloss-item" onclick="toggleGloss(this,'67','Marcwelina przekroczyła dozwoloną prędkość w terenie zabudowanym (50 km/h). Liczba oznacza aktualną prędkość oraz jednocześnie numer paragrafu z kodeksu wykroczeń, który instruktor cytuje z pamięci.')">
       <div class="gloss-term"><span class="gloss-word">67</span><span class="gloss-arrow">›</span></div>
       <div class="gloss-def"></div>
     </div>
 
-    <!-- ┌─────────────────────────────────────────────────────────┐
-         │  DEFINICJA 3 — ALE WESZŁO                               │
-         └─────────────────────────────────────────────────────────┘ -->
     <div class="gloss-item" onclick="toggleGloss(this,'ale weszło','Marcwelinie udało się zaparkować nie porysowując dwóch aut jednocześnie. Jedno auto jest lekko porysowane — co jest i tak uznawane za sukces i zaliczane do kategorii &quot;prawie idealnie&quot;.')">
       <div class="gloss-term"><span class="gloss-word">ALE WESZŁO</span><span class="gloss-arrow">›</span></div>
       <div class="gloss-def"></div>
     </div>
 
-    <!-- ┌─────────────────────────────────────────────────────────┐
-         │  DEFINICJA 4 — CZEGO OCZY NIE WIDZĄ                     │
-         └─────────────────────────────────────────────────────────┘ -->
     <div class="gloss-item" onclick="toggleGloss(this,'czego oczy nie widzą...','Marcwelina przyspiesza w kierunku rowerzysty. Pełna wersja: &quot;czego oczy nie widzą, temu sercu nie żal&quot; — zdanie wypowiedziane przez Marcwelinę tuż przed wjechaniem w rowerzyste.')">
       <div class="gloss-term"><span class="gloss-word">CZEGO OCZY NIE WIDZĄ</span><span class="gloss-arrow">›</span></div>
       <div class="gloss-def"></div>
     </div>
 
-    <!-- ┌─────────────────────────────────────────────────────────┐
-         │  DEFINICJA 5 — EGZAMINATOR KALOSZ                       │
-         └─────────────────────────────────────────────────────────┘ -->
     <div class="gloss-item" onclick="toggleGloss(this,'egzaminator kalosz','Marcwelina zablokowała całe rondo skręcając w lewo. Termin odnosi się do instruktora/egzaminatora który próbował tłumaczyć zasadę ruchu na rondzie przez całe 3 godziny wcześniej.')">
       <div class="gloss-term"><span class="gloss-word">EGZAMINATOR KALOSZ</span><span class="gloss-arrow">›</span></div>
       <div class="gloss-def"></div>
     </div>
 
-    <!-- ┌─────────────────────────────────────────────────────────┐
-         │  DEFINICJA 6 — A CO ROBI TEN PEDAŁ                      │
-         └─────────────────────────────────────────────────────────┘ -->
     <div class="gloss-item" onclick="toggleGloss(this,'a co robi ten pedał','Marcwelina pomyliła pedał sprzęgła z szeflerem.')">
       <div class="gloss-term"><span class="gloss-word">A CO ROBI TEN PEDAŁ</span><span class="gloss-arrow">›</span></div>
       <div class="gloss-def"></div>
     </div>
 
-    <!-- ┌─────────────────────────────────────────────────────────┐
-         │  DEFINICJA 7 — HWDP                                     │
-         └─────────────────────────────────────────────────────────┘ -->
     <div class="gloss-item" onclick="toggleGloss(this,'hwdp','Marcwelina dostała mandat za jazdę z włączonymi długimi, oślepiając nadjeżdżających kierowców. Skrót rozwijany przez Marcwelinę jako &quot;Hej Włącz Długie Proszę&quot; — jej zdaniem to uprzejmość, nie wykroczenie.')">
       <div class="gloss-term"><span class="gloss-word">HWDP</span><span class="gloss-arrow">›</span></div>
       <div class="gloss-def"></div>
@@ -593,6 +746,13 @@ button:active { transform:scale(.97); }
 // ═══════════════════════════════════════════════════════════════════
 //  KONFIGURACJA
 // ═══════════════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════════════
+//  BAN NA MESSENGERZE
+//  true  = ma bana (czerwone, zabronione)
+//  false = nie ma bana (zielone, wolność pisania)
+// ══════════════════════════════════════════════════════════════════
+const MARCELINA_MA_BANA = true;
 
 // ETAPY JAZDY — prędkości (km/h)
 const stages = [17, 24, 32, 40, 49, 58, 67, 69, 78, 90, 102, 112, 120];
@@ -779,11 +939,6 @@ function stopDriving() {
 }
 
 // ─── Stats ───────────────────────────────────────────────────────
-
-// ══════════════════════════════════════════════════════════════════
-// DATA STARTU KURSU — zmień jeśli kurs się przesuwa
-// Format: 'RRRR-MM-DD'
-// ══════════════════════════════════════════════════════════════════
 const COURSE_START = new Date('2026-03-18');
 
 function daysSinceStart() {
@@ -794,7 +949,6 @@ function daysSinceStart() {
   return Math.max(0, Math.floor((today - start) / (1000*60*60*24)));
 }
 
-// Pseudolosowy generator seeded datą — ten sam wynik przez cały dzień
 function seededRand(seed, salt) {
   let x = Math.sin(seed * 9301 + salt * 49297 + 233) * 43758.5453;
   return x - Math.floor(x);
@@ -802,15 +956,10 @@ function seededRand(seed, salt) {
 
 function initStats() {
   const days = daysSinceStart();
-
-  // Dni na kursie
   document.getElementById('dayCount').textContent = days;
 
-  // ── Niezdane egzaminy ──────────────────────────────────────────
-  // Dzień 0 (18.03) = 1 egzamin od razu
-  // Potem +1 co losowe 5-9 dni (seeded, więc stabilne)
   let fails = 1;
-  let nextFailDay = 5 + Math.floor(seededRand(0, 1) * 5); // 5-9
+  let nextFailDay = 5 + Math.floor(seededRand(0, 1) * 5);
   for (let d = 1; d <= days; d++) {
     if (d >= nextFailDay) {
       fails++;
@@ -821,10 +970,8 @@ function initStats() {
   document.getElementById('failSub').textContent =
     fails === 1 ? 'na razie tylko raz... 🤞' : fails < 4 ? 'instruktor traci wiarę 😬' : 'rekord wszech czasów 💀';
 
-  // ── Potrąceni rowerzyści ───────────────────────────────────────
-  // Startuje od 1 (dziś), rośnie losowo co 3-7 dni
   let cyclists = 1;
-  let nextCyclistDay = 3 + Math.floor(seededRand(0, 5) * 5); // 3-7
+  let nextCyclistDay = 3 + Math.floor(seededRand(0, 5) * 5);
   for (let d = 1; d <= days; d++) {
     if (d >= nextCyclistDay) {
       cyclists++;
@@ -854,7 +1001,6 @@ function useBlinker() {
   flashStat('blinkerFluid');
 }
 
-// Daily pass chance — seeded by date so same all day
 function getDailyChance() {
   const d = new Date();
   const seed = d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
@@ -873,10 +1019,58 @@ function initDailyChance() {
   val.className = 'stat-val ' + (pct >= 60 ? 'green' : pct >= 35 ? 'yellow' : 'red');
 }
 
+// ─── Messenger Ban ────────────────────────────────────────────────
+
+const BAN_ORACLE_MSGS = [
+  'myślę... myślę... TAK — ona ma bana.',
+  'telefon marceliny nie ma komunikacji ze swiatem.',
+  'wojtek wymusil zadoscuczynienie za grzechy.',
+  'jechowi mowia jedno - nie ma bana. ale ja widze wiecej',
+  'messenger milczy. ona też.',
+];
+
+const FREE_ORACLE_MSGS = [
+  'czysta linia. można pisać.',
+  'brak zakłóceń. kontakt dozwolony.',
+  'zuckerberg sie usmiecha.',
+  'cisza przed burza',
+  'wszelka komunikacja przywrócona. na razie.',
+];
+
+function applyBanState(banned) {
+  const tile   = document.getElementById('banTile');
+  const badge  = document.getElementById('banBadge');
+  const oracle = document.getElementById('banOracle');
+  const toggle = document.getElementById('banToggle');
+
+  tile.classList.remove('banned','unbanned');
+
+  if (banned) {
+    tile.classList.add('banned');
+    badge.textContent = '🚫 BAN AKTYWNY';
+    const msgs = BAN_ORACLE_MSGS;
+    oracle.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+    toggle.checked = true;
+  } else {
+    tile.classList.add('unbanned');
+    badge.textContent = '✅ BRAK BANU';
+    const msgs = FREE_ORACLE_MSGS;
+    oracle.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+    toggle.checked = false;
+  }
+}
+
+function onBanToggle(checked) {
+  applyBanState(checked);
+}
+
+function initBan() {
+  applyBanState(MARCELINA_MA_BANA);
+}
+
 // ─── Glossary ─────────────────────────────────────────────────────
 function toggleGloss(el, word, def) {
   const isOpen = el.classList.contains('open');
-  // close all
   document.querySelectorAll('.gloss-item').forEach(i=>i.classList.remove('open'));
   if (!isOpen) {
     el.classList.add('open');
@@ -911,6 +1105,7 @@ drawSpeedo(0);
 animate();
 initStats();
 initDailyChance();
+initBan();
 </script>
 </body>
 </html>
