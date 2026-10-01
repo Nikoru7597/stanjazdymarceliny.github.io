@@ -47,7 +47,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start}
 .imp p{font-size:12px;color:var(--mut);margin:0 0 8px;line-height:1.5}
 .imp button{width:100%;margin-top:8px;background:var(--acc);color:#0a0a0a;border:0;font-weight:600}
 #wrap{margin-top:8px;transition:opacity .15s,transform .15s}#wrap.sw{opacity:0;transform:translateY(6px)}
-.stage{display:flex;flex-direction:column}#hero{flex:none}#past{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.stage{min-height:calc(100svh - 200px);display:flex;flex-direction:column}#hero{flex:1}#past{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .big{padding:22px 20px}.big .t{font-size:52px}.cd{font-size:30px;font-weight:600;color:var(--acc);margin-top:18px}.big .f{margin-top:12px}
 .sect{margin:8px 4px 12px;font-size:12px;letter-spacing:1.4px;color:var(--mut);text-transform:uppercase}
 .fade{animation:fd .35s ease both}@keyframes fd{from{opacity:0;transform:translateY(8px)}}
@@ -59,10 +59,71 @@ header{display:flex;justify-content:space-between;align-items:flex-start}
 .vin img{position:absolute;inset:0;margin:auto;width:46%;height:46%;border-radius:50%;object-fit:cover;background:var(--card)}
 .vin:after{content:"";position:absolute;inset:0;margin:auto;width:4px;height:4px;border-radius:50%;background:var(--bg)}
 @keyframes spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.vin{animation:none}}
-.disc{display:block;width:max-content;margin:18px auto 22px}.disc .vin{width:56px;height:56px}
+.disc{display:block;width:max-content;margin:18px auto 20px}.disc .vin{width:56px;height:56px}
 .vin.out{animation:dout .5s ease-in forwards}.vin.in{animation:din .8s cubic-bezier(.2,1.3,.4,1) both}
 @keyframes dout{to{transform:translateX(110px) rotate(300deg);opacity:0}}
 @keyframes din{from{transform:translateY(-46px) scale(.4) rotate(-200deg);opacity:0}to{transform:none;opacity:1}}
+
+/* ========== DODANE: ZMIENNE KOLORÓW (oparte na istniejącej palecie) ========== */
+:root{--chat-bg:var(--card);--chat-line:var(--line);--chat-me:var(--acc);--chat-me-fg:#0a0a0a;--chat-other:#202020;
+--focus-bg:rgba(0,0,0,.82);--focus-panel:var(--card);--focus-accent:var(--acc);--focus-warn:var(--warn);--focus-danger:#FF6B6B}
+body{padding-top:56px} /* miejsce na przycisk trybu skupienia, żeby nie zasłaniał zegara */
+button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.bt{background:var(--card);border:1px solid var(--line);color:var(--fg);border-radius:14px;padding:12px 18px;font:inherit;font-weight:500;cursor:pointer;transition:.2s ease}
+.bt.pri{background:var(--acc);color:#0a0a0a;border-color:var(--acc);font-weight:600}.bt:active{transform:scale(.97)}
+.row{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.ov{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:12px;background:var(--focus-bg);opacity:0;transition:.2s ease}
+.ov[hidden]{display:none}.ov.show{opacity:1}#nickModal{z-index:200}
+.box,.fpanel{background:var(--focus-panel);border:1px solid var(--line);border-radius:22px;padding:22px;transform:scale(.94);transition:.2s ease}
+.ov.show .box,.ov.show .fpanel{transform:none}
+.box{width:min(340px,100%)}.box h2,.fpanel h2{font-size:17px;margin-bottom:12px;text-align:center}
+.box input,.trow input{width:100%;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:11px 12px;font:inherit;font-size:15px}
+.err{color:var(--focus-danger);font-size:12px;min-height:16px;margin-top:6px}
+
+/* ========== DODANE: CZAT ========== */
+#chatBtn{position:fixed;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:52px;height:52px;border-radius:50%;border:0;background:var(--acc);color:#0a0a0a;font-size:22px;z-index:50;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.5);transition:.2s ease}
+#chatBtn:active{transform:scale(.94)}
+#chat{position:fixed;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 80px);width:340px;height:460px;max-height:calc(100dvh - 110px);z-index:50;display:none;flex-direction:column;background:var(--chat-bg);border:1px solid var(--chat-line);border-radius:20px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.6)}
+#chat.open{display:flex;animation:pop .2s ease}@keyframes pop{from{opacity:0;transform:translateY(8px)}}
+.ch{display:flex;align-items:center;gap:4px;padding:12px 14px;border-bottom:1px solid var(--chat-line);font-weight:600}.ch .sp{flex:1}
+.ib{background:none;border:0;color:var(--mut);cursor:pointer;font-size:15px;padding:4px 6px;border-radius:8px;transition:.2s ease}.ib:hover{color:var(--fg)}
+#nickEdit{opacity:0}.ch:hover #nickEdit,#nickEdit:focus-visible{opacity:1}@media(hover:none){#nickEdit{opacity:.6}}
+#msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.m{display:flex;gap:8px;max-width:85%;align-self:flex-start}.m.me{align-self:flex-end;flex-direction:row-reverse}
+.av{width:28px;height:28px;border-radius:50%;background:#2a2a2a;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}.me .av{background:var(--chat-me);color:var(--chat-me-fg)}
+.bub{background:var(--chat-other);border-radius:14px;padding:7px 11px;font-size:14px;line-height:1.4;word-break:break-word}
+.me .bub{background:var(--chat-me);color:var(--chat-me-fg)}
+.meta{font-size:11px;color:var(--mut);margin-bottom:2px}.me .meta{color:rgba(10,10,10,.6)}
+.cf{display:flex;gap:8px;padding:10px;border-top:1px solid var(--chat-line)}
+.cf input{flex:1;min-width:0;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:14px}
+.cf .bt{padding:0 14px}
+@media(max-width:600px){#chat{inset:0;width:auto;height:auto;max-height:none;border-radius:0;border:0;padding-top:env(safe-area-inset-top,0px)}
+body.chat-open #chatBtn{display:none}.cf input,.box input,.trow input{font-size:16px}}
+
+/* ========== DODANE: TRYB SKUPIENIA ========== */
+.fbtn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);right:12px;z-index:60;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:999px;font-size:13px;font-weight:600;font-family:inherit;padding:8px 14px;cursor:pointer;transition:.2s ease}
+.fbtn:hover{border-color:var(--acc)}
+.fpanel{position:relative;width:min(440px,100%);max-height:calc(100dvh - 24px);overflow-y:auto;outline:0}
+.x{position:absolute;top:12px;right:12px}
+.ring{position:relative;width:min(240px,60vw);aspect-ratio:1;margin:8px auto}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:10}.ring .tr{stroke:var(--line)}
+.ring .pg{stroke:var(--focus-accent);stroke-linecap:round;stroke-dasharray:565.49;stroke-dashoffset:0;transition:stroke .4s ease}
+.tm{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#ftime{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums;font-size:clamp(34px,11vw,48px);font-weight:600;letter-spacing:-1px}
+#flabel{color:var(--mut);font-size:12px;margin-top:2px}
+.fseg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:5px;margin:14px 0 0}
+.fseg button{border:0;background:none;color:var(--mut);font:inherit;font-weight:600;padding:10px 0;border-radius:12px;cursor:pointer;transition:.2s ease}
+.fseg button.on{background:var(--focus-accent);color:#0a0a0a}
+.cnt{text-align:center;margin:14px 0;color:var(--mut);font-size:14px}
+.trow{display:flex;gap:8px}.trow input{flex:1;min-width:0}
+#tlist{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-direction:column;gap:6px}
+#tlist li{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+#tlist label{flex:1;display:flex;gap:10px;align-items:center;cursor:pointer;word-break:break-word;font-size:14px}
+#tlist li.d span{text-decoration:line-through;color:var(--mut)}#tlist input{accent-color:var(--acc);width:18px;height:18px}
+.conf{position:absolute;inset:0;background:rgba(21,21,21,.96);border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+.conf[hidden]{display:none}
+@media(prefers-reduced-motion:reduce){.ov,.box,.fpanel,#chat{transition:none;animation:none}}
 </style>
 </head>
 <body>
@@ -71,11 +132,42 @@ header{display:flex;justify-content:space-between;align-items:flex-start}
 <div class="seg"><button id="b-w">→ WZGÓRZE</button><button id="b-r">← RUMIA</button></div>
 <button class="lnk" id="pastbtn" hidden></button>
 <div id="past"></div>
-<div id="wrap"><div class="stage"><div id="hero"></div></div><div class="sect" id="nexthead" hidden>Kolejne odjazdy</div><div id="list"></div></div>
+<div id="wrap"><div class="stage"><div id="hero"></div><a class="disc" id="disc" href="https://soundcloud.com/drmoneta" target="_blank" rel="noopener" aria-label="drmoneta na SoundCloud"><span class="vin"><img src="https://i1.sndcdn.com/avatars-Fg0c9oBkJVjKygK0-7Txx8w-t200x200.jpg" alt="" referrerpolicy="no-referrer" onerror="this.remove()"></span></a></div><div class="sect" id="nexthead" hidden>Kolejne odjazdy</div><div id="list"></div></div>
 <div id="sent"></div>
 <div class="src">Rozkład planowy, bez opóźnień. W święta może obowiązywać inny rozkład.</div>
 <div class="bar"><button id="ref">Odśwież</button><button id="inst" hidden>Dodaj do ekranu</button></div>
 <a class="mk" href="https://soundcloud.com/drmoneta" target="_blank" rel="noopener"><span>made by <b>drmoneta</b></span></a>
+
+<!-- ========== DODANE: CZAT ========== -->
+<button id="chatBtn" aria-label="Otwórz czat" aria-expanded="false">💬</button>
+<section id="chat" aria-label="Czat">
+ <div class="ch"><span>Czat</span><button id="nickEdit" class="ib" aria-label="Zmień nick">✏️</button><span class="sp"></span><button id="chatClose" class="ib" aria-label="Zwiń czat">✕</button></div>
+ <div id="msgs" aria-live="polite"></div>
+ <form id="chatForm" class="cf"><input id="chatIn" maxlength="500" autocomplete="off" placeholder="Napisz wiadomość…" aria-label="Wiadomość"><button class="bt pri" aria-label="Wyślij wiadomość">Wyślij</button></form>
+</section>
+<!-- ========== DODANE: MODAL ZMIANY NICKU ========== -->
+<div id="nickModal" class="ov" hidden role="dialog" aria-modal="true" aria-labelledby="nickTitle">
+ <div class="box"><h2 id="nickTitle">Zmień nick</h2>
+  <input id="nickInput" maxlength="20" autocomplete="off" aria-label="Nowy nick"><div id="nickErr" class="err" role="alert"></div>
+  <div class="row"><button id="nickCancel" class="bt">Anuluj</button><button id="nickSave" class="bt pri">Zapisz</button></div></div>
+</div>
+<!-- ========== DODANE: TRYB SKUPIENIA ========== -->
+<button id="focusBtn" class="fbtn" aria-label="Otwórz tryb skupienia">🎯 Tryb skupienia</button>
+<div id="focus" class="ov" hidden role="dialog" aria-modal="true" aria-label="Tryb skupienia">
+ <div class="fpanel" id="fpanel" tabindex="-1">
+  <button id="fclose" class="ib x" aria-label="Zamknij tryb skupienia">✕</button>
+  <h2 id="fhello"></h2>
+  <div class="ring"><svg viewBox="0 0 200 200" aria-hidden="true"><circle class="tr" cx="100" cy="100" r="90"/><circle id="fprog" class="pg" cx="100" cy="100" r="90"/></svg>
+   <div class="tm"><div id="ftime" role="timer">25:00</div><small id="flabel">Gotowy</small></div></div>
+  <div class="fseg" role="group" aria-label="Długość pomodoro"><button data-m="25" aria-label="25 minut">25</button><button data-m="45" aria-label="45 minut">45</button><button data-m="60" aria-label="60 minut">60</button></div>
+  <div class="row"><button id="fstart" class="bt pri">Start</button><button id="freset" class="bt" aria-label="Resetuj timer">Reset</button></div>
+  <div class="cnt" id="fcount"></div>
+  <form id="tform" class="trow"><input id="tin" maxlength="100" autocomplete="off" placeholder="Dodaj zadanie…" aria-label="Nowe zadanie"><button class="bt pri" aria-label="Dodaj zadanie">+</button></form>
+  <ul id="tlist"></ul>
+  <div id="fconf" class="conf" hidden role="alertdialog" aria-label="Potwierdzenie">Timer w trakcie. Na pewno zamknąć?
+   <div class="row"><button id="fno" class="bt">Nie</button><button id="fyes" class="bt pri">Zamknij</button></div></div>
+ </div>
+</div>
 <script>
 const TZ="Europe/Warsaw",$=id=>document.getElementById(id);
 const LS={g(k){try{return localStorage.getItem(k)}catch(e){return null}},s(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
@@ -110,7 +202,6 @@ function render(){const n=now();$("clock").textContent=n.hm;
   l=rest.slice(0,shown).map(y=>card(y,"",`<div class="f"><span>${y.tt} min podróży</span><span class="in">${lab(Math.ceil(y.left/60))}</span></div>`)).join("");
   if(T.up[0]&&showPast&&T.past.length)p='<div class="sect">Wcześniejsze — już odjechały</div>'+T.past.slice(-10).map(y=>card(y,"pst",`<div class="f"><span>odjechał</span><span></span></div>`)).join("")}
  if(T&&!T.up.length&&showPast&&T.past.length)p='<div class="sect">Wcześniejsze — już odjechały</div>'+T.past.slice(-10).map(y=>card(y,"pst",`<div class="f"><span>odjechał</span><span></span></div>`)).join("");
- h += '<a class="disc" id="disc" href="https://soundcloud.com/drmoneta" target="_blank" rel="noopener" aria-label="drmoneta na SoundCloud"><span class="vin"><img src="https://i1.sndcdn.com/avatars-Fg0c9oBkJVjKygK0-7Txx8w-t200x200.jpg" alt="" referrerpolicy="no-referrer" onerror="this.remove()"></span></a>';
  const pb=$("pastbtn");pb.hidden=!(T&&T.past.length);pb.textContent=showPast?"Ukryj wcześniejsze":"Pokaż wcześniejsze";
  [["hero",h],["list",l],["past",p]].forEach(([id,v])=>{const e=$(id);if(e._h!==v){e.innerHTML=v;e._h=v}});$("nexthead").hidden=!nh;
  if(T)T.up.slice(0,1+shown).concat(showPast?T.past.slice(-10):[]).forEach(x=>seen.add(x.k))}
@@ -125,8 +216,140 @@ let dp;addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;$("ins
 if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)load()});addEventListener("online",load);
 function swapDisc(){if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;const v=$("disc").firstElementChild;v.classList.add("out");setTimeout(()=>{v.classList.remove("out");v.classList.add("in")},500);setTimeout(()=>v.classList.remove("in"),1350)}
-if(Math.random()<0)setTimeout(swapDisc,1200);
+if(Math.random()<0.25)setTimeout(swapDisc,1200);
 render();load();setInterval(render,1000);setInterval(load,600000);
+</script>
+<script>
+/* ===================== DODANE: CZAT + NICK + TRYB SKUPIENIA ===================== */
+(function(){
+"use strict";
+/* ---------- Narzędzia ---------- */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const rawGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const rawSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){rawSet(k,JSON.stringify(v))}};
+const timers={};
+function openOv(el){clearTimeout(timers[el.id]);el.hidden=false;void el.offsetWidth;el.classList.add("show")}
+function closeOv(el){el.classList.remove("show");timers[el.id]=setTimeout(()=>{el.hidden=true},200)}
+
+/* ---------- Nick (klucz: chat_nick) i identyfikator klienta ---------- */
+let nick=rawGet("chat_nick");
+if(!nick){nick="Gość-"+String(Math.floor(Math.random()*10000)).padStart(4,"0");rawSet("chat_nick",nick)}
+let cid=rawGet("chat_cid");
+if(!cid){cid=Date.now().toString(36)+Math.random().toString(36).slice(2,8);rawSet("chat_cid",cid)}
+
+/* ---------- Backend czatu ----------
+   TODO: podmień na prawdziwy backend (np. Firebase)
+   const FIREBASE_CONFIG = { apiKey:"", authDomain:"", databaseURL:"", projectId:"", appId:"" }; // <- tu wklej konfigurację
+   Wystarczy podmienić 3 metody: load(), send(m), onUpdate(cb). Reszta kodu się nie zmienia. */
+const Backend={
+ KEY:"chat_msgs",
+ bc:("BroadcastChannel" in window)?new BroadcastChannel("chat"):null,
+ load(){const a=store.get(this.KEY,[]);return Array.isArray(a)?a:[]},
+ send(m){const a=this.load();a.push(m);store.set(this.KEY,a.slice(-200));if(this.bc)this.bc.postMessage("new")}, /* limit 200 wiadomości */
+ onUpdate(cb){if(this.bc)this.bc.onmessage=cb;addEventListener("storage",e=>{if(e.key===this.KEY)cb()})}
+};
+
+/* ---------- Czat: UI ---------- */
+const chat=$("chat"),msgs=$("msgs"),chatIn=$("chatIn");
+function renderChat(){
+ msgs.innerHTML=Backend.load().slice(-200).map(m=>{
+  const t=new Date(m.ts).toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit"});
+  return `<div class="m${m.cid===cid?" me":""}"><div class="av" aria-hidden="true">${esc(([...String(m.nick)][0]||"?").toUpperCase())}</div><div class="bub"><div class="meta">${esc(m.nick)} · ${t}</div>${esc(m.text)}</div></div>`}).join("");
+ msgs.scrollTop=msgs.scrollHeight; /* auto-scroll */
+}
+function setChat(open){
+ chat.classList.toggle("open",open);document.body.classList.toggle("chat-open",open);
+ $("chatBtn").setAttribute("aria-expanded",open);
+ if(open){renderChat();chatIn.focus()}else $("chatBtn").focus();
+}
+$("chatBtn").onclick=()=>setChat(!chat.classList.contains("open"));
+$("chatClose").onclick=()=>setChat(false);
+$("chatForm").onsubmit=e=>{e.preventDefault(); /* Enter też wysyła */
+ const text=chatIn.value.trim();if(!text)return;
+ Backend.send({id:Date.now()+"-"+Math.random().toString(36).slice(2,6),cid,nick,text,ts:Date.now()});
+ chatIn.value="";renderChat()};
+Backend.onUpdate(renderChat);
+
+/* ---------- Zmiana nicku ---------- */
+const nm=$("nickModal"),ni=$("nickInput"),ne=$("nickErr");
+function openNick(){ni.value=nick;ne.textContent="";openOv(nm);ni.focus();ni.select()}
+function closeNick(){closeOv(nm);$("nickEdit").focus()}
+function saveNick(){
+ const v=ni.value.trim();
+ if(!/^[\p{L}\p{N} -]{2,20}$/u.test(v)){ne.textContent="Nick: 2–20 znaków, tylko litery, cyfry, spacja i myślnik.";return}
+ nick=v;rawSet("chat_nick",nick);$("fhello").textContent="Cześć, "+nick+"!";closeNick()}
+$("nickEdit").onclick=openNick;$("nickCancel").onclick=closeNick;$("nickSave").onclick=saveNick;
+ni.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();saveNick()}};
+nm.onclick=e=>{if(e.target===nm)closeNick()};
+
+/* ---------- Tryb skupienia: elementy i stan ---------- */
+const fo=$("focus"),fpanel=$("fpanel"),fprog=$("fprog"),ftime=$("ftime"),flabel=$("flabel"),fstart=$("fstart"),fconf=$("fconf");
+const C=2*Math.PI*90; /* obwód ringu */
+let len=+store.get("focus_len",25);if(![25,45,60].includes(len))len=25;
+let total=len*60000,left=total,running=false,endAt=0,raf=0,to=0,actx=null,lastFocus=null;
+
+/* ---------- Timer: rysowanie ringu i czasu ---------- */
+function fmt(ms){const s=Math.ceil(ms/1000);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function paint(){
+ fprog.style.strokeDashoffset=C*(1-(total?left/total:0)); /* pierścień płynnie się kurczy */
+ ftime.textContent=fmt(left);
+ const s=left/1000;fprog.style.stroke=s<60?"var(--focus-danger)":s<300?"var(--focus-warn)":"var(--focus-accent)"}
+function tick(){if(!running)return;left=Math.max(0,endAt-Date.now());paint();if(left<=0){finish();return}raf=requestAnimationFrame(tick)}
+function halt(){running=false;cancelAnimationFrame(raf);clearTimeout(to);fstart.textContent="Start"}
+function start(){
+ if(left<=0)left=total;
+ try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(e){} /* odblokowanie dźwięku gestem użytkownika */
+ if("Notification" in window&&Notification.permission==="default")Notification.requestPermission();
+ running=true;endAt=Date.now()+left;fstart.textContent="Pauza";flabel.textContent="Skupienie";
+ raf=requestAnimationFrame(tick);to=setTimeout(tick,left+30)} /* setTimeout działa też w tle karty */
+function pause(){left=Math.max(0,endAt-Date.now());halt();flabel.textContent="Pauza";paint()}
+function reset(){halt();left=total;flabel.textContent="Gotowy";paint()}
+function finish(){halt();left=0;paint();flabel.textContent="Koniec! 🍅";beep();notify();addDone()}
+function setLen(m){if(running)return;len=m;total=m*60000;left=total;store.set("focus_len",m);segs();flabel.textContent="Gotowy";paint()}
+function segs(){document.querySelectorAll(".fseg button").forEach(b=>b.classList.toggle("on",+b.dataset.m===len))}
+fstart.onclick=()=>running?pause():start();$("freset").onclick=reset;
+document.querySelectorAll(".fseg button").forEach(b=>b.onclick=()=>setLen(+b.dataset.m));
+
+/* ---------- Dźwięk i powiadomienie ---------- */
+function beep(){try{const t=actx.currentTime;[0,.25,.5].forEach(d=>{const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=880;o.connect(g);g.connect(actx.destination);
+ g.gain.setValueAtTime(.2,t+d);g.gain.exponentialRampToValueAtTime(.001,t+d+.2);o.start(t+d);o.stop(t+d+.2)})}catch(e){}}
+function notify(){try{if("Notification" in window&&Notification.permission==="granted")new Notification("🍅 Pomodoro zakończone!",{body:"Czas na przerwę, "+nick+"."})}catch(e){}}
+
+/* ---------- Licznik pomodoro dziś (reset o północy – porównanie daty) ---------- */
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+function getDone(){const o=store.get("focus_done",null);return o&&o.date===today()?o.n:0}
+function paintCount(){$("fcount").textContent="🍅 x "+getDone()}
+function addDone(){store.set("focus_done",{date:today(),n:getDone()+1});paintCount()}
+
+/* ---------- Lista zadań (klucz: focus_tasks) ---------- */
+let tasks=store.get("focus_tasks",[]);if(!Array.isArray(tasks))tasks=[];
+const tlist=$("tlist");
+function paintTasks(){tlist.innerHTML=tasks.map(t=>`<li class="${t.done?"d":""}"><label><input type="checkbox" data-id="${esc(t.id)}"${t.done?" checked":""}><span>${esc(t.t)}</span></label><button class="ib" data-del="${esc(t.id)}" aria-label="Usuń zadanie">✕</button></li>`).join("")}
+function saveTasks(){store.set("focus_tasks",tasks);paintTasks()}
+$("tform").onsubmit=e=>{e.preventDefault();const v=$("tin").value.trim();if(!v)return;tasks.push({id:Date.now()+""+Math.floor(Math.random()*1000),t:v,done:false});$("tin").value="";saveTasks()};
+tlist.onchange=e=>{const t=tasks.find(x=>x.id===e.target.dataset.id);if(t){t.done=e.target.checked;saveTasks()}};
+tlist.onclick=e=>{const id=e.target.dataset&&e.target.dataset.del;if(id){tasks=tasks.filter(x=>x.id!==id);saveTasks()}};
+
+/* ---------- Otwieranie / zamykanie trybu skupienia ---------- */
+function openFocus(){lastFocus=document.activeElement;$("fhello").textContent="Cześć, "+nick+"!";paintCount();paintTasks();segs();paint();
+ openOv(fo);document.body.style.overflow="hidden";fpanel.focus()}
+function closeFocus(){closeOv(fo);fconf.hidden=true;document.body.style.overflow="";if(lastFocus)lastFocus.focus()}
+function reqClose(){if(running){fconf.hidden=false;$("fyes").focus()}else closeFocus()} /* aktywny timer -> potwierdzenie */
+$("focusBtn").onclick=openFocus;$("fclose").onclick=reqClose;$("fno").onclick=()=>{fconf.hidden=true;fpanel.focus()};
+$("fyes").onclick=()=>{reset();closeFocus()};
+fo.onclick=e=>{if(e.target===fo)reqClose()};
+
+/* ---------- Klawiatura: Esc ---------- */
+document.addEventListener("keydown",e=>{
+ if(e.key!=="Escape")return;
+ if(!nm.hidden){closeNick();return}
+ if(!fo.hidden){if(!fconf.hidden)fconf.hidden=true;else reqClose()}
+});
+
+segs();paint();
+})();
 </script>
 </body>
 </html>
