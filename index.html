@@ -124,6 +124,30 @@ body.chat-open #chatBtn{display:none}.cf input,.box input,.trow input{font-size:
 .conf{position:absolute;inset:0;background:rgba(21,21,21,.96);border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
 .conf[hidden]{display:none}
 @media(prefers-reduced-motion:reduce){.ov,.box,.fpanel,#chat{transition:none;animation:none}}
+
+/* ===== DODANE v2: ładniejszy czat + bloki kodu ===== */
+@media(min-width:601px){#chat{width:380px;height:540px;border-radius:24px}}
+#chat{background:linear-gradient(180deg,#181818,#101010);box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 0 1px rgba(134,227,160,.1)}
+.ch{padding:14px 16px;font-size:15px;background:rgba(255,255,255,.025)}
+.dot2{width:8px;height:8px;border-radius:50%;background:var(--warn);margin-left:6px;transition:.3s}.dot2.ok{background:var(--acc);box-shadow:0 0 8px var(--acc)}
+#msgs{padding:16px 14px;gap:12px}
+.m{max-width:90%;align-items:flex-end;animation:pop .2s ease}
+.bub{border-radius:18px 18px 18px 6px;padding:9px 13px;white-space:pre-wrap}.me .bub{border-radius:18px 18px 6px 18px}
+.code{position:relative;margin:6px 0 2px;background:#0a0a0a;border:1px solid var(--line);border-radius:12px;white-space:normal}
+.me .code{background:rgba(0,0,0,.2);border-color:rgba(0,0,0,.25)}
+.code pre{margin:0;padding:26px 12px 10px;overflow-x:auto;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:inherit;white-space:pre}
+.cp{position:absolute;top:5px;right:6px;border:0;background:rgba(255,255,255,.1);color:inherit;font:600 11px inherit;font-family:inherit;padding:3px 8px;border-radius:8px;cursor:pointer}
+.me .cp{background:rgba(0,0,0,.18)}
+.cf{align-items:flex-end}
+.cf textarea{flex:1;min-width:0;resize:none;max-height:120px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font:inherit;font-size:14px;line-height:1.4;transition:.2s ease}
+.cf textarea:focus{border-color:var(--acc);outline:0}
+.cf .ib{font:600 13px ui-monospace,monospace;border:1px solid var(--line);border-radius:12px;padding:10px}
+.empty{margin:auto;text-align:center;color:var(--mut);font-size:13px;line-height:1.7;padding:20px}.empty b{color:var(--acc);font-family:ui-monospace,monospace;font-size:15px}
+.box label{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px}
+@media(max-width:600px){.cf textarea{font-size:16px}}
+/* ===== DODANE v3: wyraźny przycisk zwijania czatu ===== */
+.cl{font-size:13px;font-weight:600;font-family:inherit;color:var(--fg);background:rgba(255,255,255,.09);border-radius:999px;padding:8px 14px}
+@media(max-width:600px){.ch{padding:12px 14px;min-height:56px}.cl{font-size:15px;padding:10px 18px}}
 </style>
 </head>
 <body>
@@ -141,14 +165,16 @@ body.chat-open #chatBtn{display:none}.cf input,.box input,.trow input{font-size:
 <!-- ========== DODANE: CZAT ========== -->
 <button id="chatBtn" aria-label="Otwórz czat" aria-expanded="false">💬</button>
 <section id="chat" aria-label="Czat">
- <div class="ch"><span>Czat</span><button id="nickEdit" class="ib" aria-label="Zmień nick">✏️</button><span class="sp"></span><button id="chatClose" class="ib" aria-label="Zwiń czat">✕</button></div>
+ <div class="ch"><span>Czat</span><i id="chatDot" class="dot2" title="Łączenie…"></i><button id="nickEdit" class="ib" aria-label="Zmień nick">✏️</button><span class="sp"></span><button id="chatClose" class="ib cl" aria-label="Zwiń czat">▾ Zwiń</button></div>
  <div id="msgs" aria-live="polite"></div>
- <form id="chatForm" class="cf"><input id="chatIn" maxlength="500" autocomplete="off" placeholder="Napisz wiadomość…" aria-label="Wiadomość"><button class="bt pri" aria-label="Wyślij wiadomość">Wyślij</button></form>
+ <form id="chatForm" class="cf"><button type="button" id="codeBtn" class="ib" aria-label="Wstaw blok kodu" title="Blok kodu">&lt;/&gt;</button><textarea id="chatIn" rows="1" maxlength="1500" placeholder="Wiadomość lub kod… (Shift+Enter = nowa linia)" aria-label="Wiadomość"></textarea><button class="bt pri" aria-label="Wyślij wiadomość">Wyślij</button></form>
 </section>
 <!-- ========== DODANE: MODAL ZMIANY NICKU ========== -->
 <div id="nickModal" class="ov" hidden role="dialog" aria-modal="true" aria-labelledby="nickTitle">
- <div class="box"><h2 id="nickTitle">Zmień nick</h2>
-  <input id="nickInput" maxlength="20" autocomplete="off" aria-label="Nowy nick"><div id="nickErr" class="err" role="alert"></div>
+ <div class="box"><h2 id="nickTitle">Ustawienia czatu</h2>
+  <label for="nickInput">Twój nick</label><input id="nickInput" maxlength="20" autocomplete="off">
+  <label for="roomInput">Kod pokoju (taki sam u całej klasy)</label><input id="roomInput" maxlength="30" autocomplete="off">
+  <div class="row"><button id="roomLink" type="button" class="bt">Kopiuj link do pokoju</button></div><div id="nickErr" class="err" role="alert"></div>
   <div class="row"><button id="nickCancel" class="bt">Anuluj</button><button id="nickSave" class="bt pri">Zapisz</button></div></div>
 </div>
 <!-- ========== DODANE: TRYB SKUPIENIA ========== -->
@@ -239,47 +265,86 @@ if(!nick){nick="Gość-"+String(Math.floor(Math.random()*10000)).padStart(4,"0")
 let cid=rawGet("chat_cid");
 if(!cid){cid=Date.now().toString(36)+Math.random().toString(36).slice(2,8);rawSet("chat_cid",cid)}
 
-/* ---------- Backend czatu ----------
-   TODO: podmień na prawdziwy backend (np. Firebase)
-   const FIREBASE_CONFIG = { apiKey:"", authDomain:"", databaseURL:"", projectId:"", appId:"" }; // <- tu wklej konfigurację
-   Wystarczy podmienić 3 metody: load(), send(m), onUpdate(cb). Reszta kodu się nie zmienia. */
+/* ---------- Pokój czatu (wspólny kod = wspólny czat) ---------- */
+const validRoom=v=>/^[a-z0-9-]{4,30}$/.test(v);
+let room=rawGet("chat_room");
+{const q=(new URLSearchParams(location.search).get("pokoj")||"").toLowerCase();if(validRoom(q)){room=q;rawSet("chat_room",q)}}
+if(!validRoom(room||"")){room=Math.random().toString(36).slice(2,8);rawSet("chat_room",room)}
+
+/* ---------- Backend czatu: ntfy.sh (publiczny serwer pub/sub, bez konta) ----------
+   TODO: podmień na prawdziwy backend (np. Firebase) – wystarczy zmienić load(), send(m), connect().
+   const FIREBASE_CONFIG = { apiKey:"", authDomain:"", databaseURL:"", projectId:"", appId:"" }; // <- tu wklej konfigurację */
+function setStatus(ok){const d=$("chatDot");d.classList.toggle("ok",ok);d.title=ok?"Połączono":"Brak połączenia"}
 const Backend={
- KEY:"chat_msgs",
- bc:("BroadcastChannel" in window)?new BroadcastChannel("chat"):null,
- load(){const a=store.get(this.KEY,[]);return Array.isArray(a)?a:[]},
- send(m){const a=this.load();a.push(m);store.set(this.KEY,a.slice(-200));if(this.bc)this.bc.postMessage("new")}, /* limit 200 wiadomości */
- onUpdate(cb){if(this.bc)this.bc.onmessage=cb;addEventListener("storage",e=>{if(e.key===this.KEY)cb()})}
+ base:"https://ntfy.sh/skmchat-",msgs:[],cb:function(){},es:null,
+ load(){return this.msgs},
+ add(m){
+  if(!m||typeof m.id!=="string"||typeof m.nick!=="string"||typeof m.text!=="string"||typeof m.cid!=="string"||typeof m.ts!=="number")return;
+  if(this.msgs.some(x=>x.id===m.id))return;
+  this.msgs.push({id:m.id,cid:m.cid,nick:m.nick.slice(0,20),text:m.text.slice(0,1500),ts:m.ts});
+  this.msgs.sort((a,b)=>a.ts-b.ts);this.msgs=this.msgs.slice(-200); /* limit 200 */
+  store.set("chat_cache_"+room,this.msgs)},
+ async send(m){this.add(m);this.cb();
+  try{const r=await fetch(this.base+room,{method:"POST",body:JSON.stringify(m)});if(!r.ok)throw 0}catch(e){setStatus(false)}},
+ onUpdate(cb){this.cb=cb},
+ connect(){
+  if(this.es)this.es.close();
+  this.msgs=store.get("chat_cache_"+room,[]);this.cb();
+  const es=this.es=new EventSource(this.base+room+"/sse?since=12h");
+  es.onopen=()=>setStatus(true);es.onerror=()=>setStatus(false);
+  es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.event!=="message")return;this.add(JSON.parse(d.message));this.cb()}catch(x){}}}
 };
 
 /* ---------- Czat: UI ---------- */
 const chat=$("chat"),msgs=$("msgs"),chatIn=$("chatIn");
+const hue=n=>{let h=0;for(const c of String(n))h=(h*31+c.charCodeAt(0))%360;return h};
+function body(t){ /* ```kod``` -> blok z przyciskiem Kopiuj; reszta to zwykły tekst (wszystko escapowane) */
+ return t.split("```").map((p,i)=>i%2?`<div class="code"><button class="cp" data-copy aria-label="Kopiuj kod">Kopiuj</button><pre>${esc(p.replace(/^[^\n]*\n/,""))}</pre></div>`:(p.trim()?esc(p.replace(/^\n+|\n+$/g,"")):"")).join("")}
 function renderChat(){
- msgs.innerHTML=Backend.load().slice(-200).map(m=>{
-  const t=new Date(m.ts).toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit"});
-  return `<div class="m${m.cid===cid?" me":""}"><div class="av" aria-hidden="true">${esc(([...String(m.nick)][0]||"?").toUpperCase())}</div><div class="bub"><div class="meta">${esc(m.nick)} · ${t}</div>${esc(m.text)}</div></div>`}).join("");
+ const all=Backend.load();
+ msgs.innerHTML=all.length?all.map(m=>{
+  const t=new Date(m.ts).toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit"}),me=m.cid===cid,h=hue(m.nick);
+  return `<div class="m${me?" me":""}"><div class="av" aria-hidden="true"${me?"":` style="background:hsl(${h} 45% 30%);color:hsl(${h} 80% 85%)"`}>${esc(([...m.nick][0]||"?").toUpperCase())}</div><div class="bub"><div class="meta"${me?"":` style="color:hsl(${h} 70% 70%)"`}>${esc(m.nick)} · ${t}</div>${body(m.text)}</div></div>`}).join("")
+ :`<div class="empty">Brak wiadomości.<br>Kod pokoju: <b>${esc(room)}</b><br>Podaj go klasie (✏️ → „Kopiuj link").<br>Kod w czacie wklejaj w blokach: przycisk &lt;/&gt;</div>`;
  msgs.scrollTop=msgs.scrollHeight; /* auto-scroll */
 }
 function setChat(open){
  chat.classList.toggle("open",open);document.body.classList.toggle("chat-open",open);
  $("chatBtn").setAttribute("aria-expanded",open);
- if(open){renderChat();chatIn.focus()}else $("chatBtn").focus();
+ if(open){fitChat();renderChat();chatIn.focus()}else $("chatBtn").focus();
 }
 $("chatBtn").onclick=()=>setChat(!chat.classList.contains("open"));
 $("chatClose").onclick=()=>setChat(false);
 $("chatForm").onsubmit=e=>{e.preventDefault(); /* Enter też wysyła */
  const text=chatIn.value.trim();if(!text)return;
  Backend.send({id:Date.now()+"-"+Math.random().toString(36).slice(2,6),cid,nick,text,ts:Date.now()});
- chatIn.value="";renderChat()};
-Backend.onUpdate(renderChat);
+ chatIn.value="";chatIn.style.height="";renderChat()};
+Backend.onUpdate(renderChat);Backend.connect();
+/* iPhone: dopasuj wysokość czatu do widocznego obszaru (klawiatura nie zasłania pola ani przycisku Zwiń) */
+function fitChat(){const vv=window.visualViewport,m=matchMedia("(max-width:600px)").matches;
+ if(vv&&m&&chat.classList.contains("open")){chat.style.height=vv.height+"px";chat.style.top=vv.offsetTop+"px";chat.style.bottom="auto"}
+ else{chat.style.height=chat.style.top=chat.style.bottom=""}
+ msgs.scrollTop=msgs.scrollHeight}
+if(window.visualViewport){visualViewport.addEventListener("resize",fitChat);visualViewport.addEventListener("scroll",fitChat)}
+chatIn.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("chatForm").requestSubmit()}}; /* Enter wysyła, Shift+Enter = nowa linia */
+chatIn.oninput=()=>{chatIn.style.height="auto";chatIn.style.height=chatIn.scrollHeight+"px"};
+$("codeBtn").onclick=()=>{const v=chatIn.value;chatIn.value=v.includes("```")?v:"```\n"+v+"\n```";chatIn.focus();chatIn.oninput()};
+msgs.onclick=e=>{const b=e.target.closest("[data-copy]");if(!b)return;const txt=b.nextElementSibling.textContent;
+ (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{b.textContent="Skopiowano ✓"},()=>{b.textContent="Zaznacz ręcznie"});setTimeout(()=>b.textContent="Kopiuj",1500)};
 
 /* ---------- Zmiana nicku ---------- */
 const nm=$("nickModal"),ni=$("nickInput"),ne=$("nickErr");
-function openNick(){ni.value=nick;ne.textContent="";openOv(nm);ni.focus();ni.select()}
+function openNick(){$("roomInput").value=room;ni.value=nick;ne.textContent="";openOv(nm);ni.focus();ni.select()}
 function closeNick(){closeOv(nm);$("nickEdit").focus()}
 function saveNick(){
- const v=ni.value.trim();
+ const v=ni.value.trim(),r=$("roomInput").value.trim().toLowerCase();
  if(!/^[\p{L}\p{N} -]{2,20}$/u.test(v)){ne.textContent="Nick: 2–20 znaków, tylko litery, cyfry, spacja i myślnik.";return}
- nick=v;rawSet("chat_nick",nick);$("fhello").textContent="Cześć, "+nick+"!";closeNick()}
+ if(!validRoom(r)){ne.textContent="Kod pokoju: 4–30 znaków, małe litery a–z, cyfry, myślnik.";return}
+ nick=v;rawSet("chat_nick",nick);$("fhello").textContent="Cześć, "+nick+"!";
+ if(r!==room){room=r;rawSet("chat_room",room);Backend.connect()}
+ closeNick()}
+$("roomLink").onclick=()=>{const u=location.origin+location.pathname+"?pokoj="+($("roomInput").value.trim().toLowerCase()||room);
+ (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>{ne.textContent="Link skopiowany ✓"},()=>{ne.textContent=u})};
 $("nickEdit").onclick=openNick;$("nickCancel").onclick=closeNick;$("nickSave").onclick=saveNick;
 ni.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();saveNick()}};
 nm.onclick=e=>{if(e.target===nm)closeNick()};
